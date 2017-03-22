@@ -102,7 +102,9 @@
 
         [System.Security.Authentication.SslProtocols]$Ssl,
 
-        [switch]$IncludeEnvelope
+        [switch]$IncludeEnvelope,
+        # Allow testing
+        [Switch]$BreakAfterFirst
     )
     try
     {
@@ -151,6 +153,11 @@
                 {
                     $Channel.BasicAck($Delivery.DeliveryTag, $false)
                 }
+
+            }
+
+            if ($BreakAfterFirst) {
+                break      
             }
         }
     }

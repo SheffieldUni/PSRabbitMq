@@ -69,7 +69,7 @@
         $HostNameProp.SetValue($Factory, $ComputerName)
 
         $TcpPortProp = [RabbitMQ.Client.ConnectionFactory].GetField("Port")
-        $TcpPortProp.SetValue($Factory, 5671)
+        $TcpPortProp.SetValue($Factory, 5672)
 
         $SslOptionsParams = @{}
         Switch($PSBoundParameters.Keys)
@@ -93,6 +93,8 @@
         }
         if($SslOptionsParams.count -gt 0)
         {
+            $TcpPortProp.SetValue($Factory, 5671)
+            $SslOptionsParams.Add('AcceptablePolicyErrors', [System.Net.Security.SslPolicyErrors]::RemoteCertificateChainErrors) # Hack for self-signed cert
             New-RabbitMqSslOption @SslOptionsParams -ServerName $ComputerName -Factory $Factory -ErrorAction Stop
         }
     
